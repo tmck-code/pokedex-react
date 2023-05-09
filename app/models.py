@@ -19,8 +19,9 @@ class Card(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
-    description = Column(String, index=True)
+    code = Column(String, index=True)
     image_url = Column(String, index=False)
+    description = Column(String, index=True)
     set_id = Column(Integer, ForeignKey("sets.id"))
 
     owner = relationship("Set", back_populates="cards")

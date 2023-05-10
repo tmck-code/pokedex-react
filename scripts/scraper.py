@@ -21,7 +21,7 @@ def run(url):
     for i, url in enumerate(urls):
         name, set_name, number_in_set, _id, _ext = url.split('/')[-1].split('.')
         ofname = f'{number_in_set}_{name}.png'
-        print(i, set_name, ofname, url)
+        print(f'{i}/{len(urls)}', set_name, ofname, url)
 
         download_image(url, set_name, ofname)
 

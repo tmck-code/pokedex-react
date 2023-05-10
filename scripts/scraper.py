@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 
 import os, sys
-
 import requests
-
 
 def find_image_urls(html):
     for i, line in enumerate(html.split('\n')):

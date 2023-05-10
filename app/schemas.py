@@ -2,14 +2,13 @@ from pydantic import BaseModel
 
 
 class CardBase(BaseModel):
+    number_in_set: int
     title: str
     image_url: str
     description: str | None = None
 
 
-class CardCreate(CardBase):
-    pass
-
+class CardCreate(CardBase): pass
 
 class Card(CardBase):
     id: int
@@ -19,17 +18,16 @@ class Card(CardBase):
         orm_mode = True
 
 
-class SetBase(BaseModel):
-    name: str
+class CardSetBase(BaseModel):
     code: str
+    name: str
     description: str | None = None
 
 
-class SetCreate(SetBase):
-    pass
+class CardSetCreate(CardSetBase): pass
 
 
-class Set(SetBase):
+class CardSet(CardSetBase):
     id: int
     Cards: list[Card] = []
 

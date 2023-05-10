@@ -12,7 +12,7 @@ class CardCreate(CardBase): pass
 
 class Card(CardBase):
     id: int
-    set_id: int
+    card_set_id: int
 
     class Config:
         orm_mode = True

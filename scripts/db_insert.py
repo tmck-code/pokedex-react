@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os
+import os, sys
 from collections import namedtuple
 import sqlite3
 
@@ -43,3 +43,5 @@ def run(dirpath):
             )
             insert_card(conn, card)
 
+if __name__ == '__main__':
+    run(sys.argv[1])

@@ -12,7 +12,7 @@ class CardSet(Base):
     name = Column(String, unique=True, index=True)
     description = Column(String)
 
-    items = relationship("Card", back_populates="card_set")
+    cards = relationship("Card", back_populates="card_set")
 
 
 class Card(Base):

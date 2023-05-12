@@ -61,5 +61,5 @@ def create_card_for_set(card_set_id: int, card: schemas.CardCreate, db: Session 
 @app.get("/cards/", response_model=list[schemas.Card])
 def read_cards(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     cards = crud.get_cards(db, skip=skip, limit=limit)
-    return cards
+    return sorted(cards, key=lambda x: x.number_in_set)
 

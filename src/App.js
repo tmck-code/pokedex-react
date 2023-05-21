@@ -35,18 +35,18 @@ function Cards() {
   const listCards = data.map((card) =>
     <Grid>
       <Box>
-        <Card variant="outlined" sx={{ maxWidth: 592 }}>
+        <Card variant="outlined" sx={{ maxWidth: 300, height: 650 }}>
           <CardMedia
             component="img"
             image={require('./' + card.image_url)}
             alt={card.title}
           />
           <CardContent>
-            <Typography variant="h3" component="div">
-              {card.title}
+            <Typography variant="body1" color="text.secondary" component="div">
+	      #{card.number_in_set}
             </Typography>
-            <Typography variant="body2" color="text.secondary" component="div">
-	      {card.number_in_set}
+            <Typography variant="h4" component="div">
+              {card.title}
             </Typography>
           </CardContent>
         </Card>
@@ -65,7 +65,6 @@ export default function MyApp() {
   return (
     <div>
       <Cards />
-      <h1>Welcome to my app</h1>
     </div>
   );
 }

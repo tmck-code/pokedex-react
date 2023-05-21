@@ -1,5 +1,12 @@
+import * as React from 'react';
 import {useState, useEffect} from 'react';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+
 
 import './App.css';
 
@@ -23,10 +30,27 @@ function Cards() {
   //    <p>{card.title}</p>
   //    <p>{JSON.stringify(card)}</p>
   //  </li>
+  // <img className="avatar" src={require('./' + card.image_url)} alt="logo" />
+  // <!-- the max width of any pokemon image is 592 -->
   const listCards = data.map((card) =>
     <Grid>
-      <img className="avatar" src={require('./' + card.image_url)} alt="logo" />
-      <p>{card.name}</p>
+      <Box>
+        <Card variant="outlined" sx={{ maxWidth: 592 }}>
+          <CardMedia
+            component="img"
+            image={require('./' + card.image_url)}
+            alt={card.title}
+          />
+          <CardContent>
+            <Typography variant="h3" component="div">
+              {card.title}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" component="div">
+	      {card.number_in_set}
+            </Typography>
+          </CardContent>
+        </Card>
+      </Box>
     </Grid>
   );
 

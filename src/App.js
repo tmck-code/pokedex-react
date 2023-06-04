@@ -7,19 +7,43 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 // for the zoom
-import Switch from '@mui/material/Switch';
-import Paper from '@mui/material/Paper';
-import Zoom from '@mui/material/Zoom';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { Theme } from '@mui/material/styles';
+// import Switch from '@mui/material/Switch';
+// import Paper from '@mui/material/Paper';
+// import Zoom from '@mui/material/Zoom';
+// import FormControlLabel from '@mui/material/FormControlLabel';
+// import { Theme } from '@mui/material/styles';
+// Modal
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
 
 
 import './App.css';
 
 
+const style = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  "&:hover": {
+    backgroundcolor: "red"
+  }
+};
+
+
 function Cards() {
   const [data, setData] = useState([])
-  const [checked, setChecked] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const [image, setCard] = useState("false");
+
+  const handleClick = (value) => {
+    setCard(value);
+    setOpen(true);
+    console.log(image);
+  };
+
 
   const fetchData = async ()=>{
     let res = await fetch('http://localhost:8000/cards/')
@@ -32,41 +56,57 @@ function Cards() {
       fetchData()
   }, [])
 
-  const handleChange = () => {
-    setChecked((prev) => !prev);
-  };
-
   const listCards = data.map((card) =>
-  <Grid>
-
-      <Box sx={{ height: 180 }}>
-        <FormControlLabel
-          control={<Switch checked={checked} onChange={handleChange} />}
-          label="Show"
+    <Grid>
+    <Box>
+      {/* <!-- the max width of any pokemon image is 592 --> */}
+      <Card variant="outlined" sx={{ maxWidth: 300, height: 650 }}>
+        <CardMedia
+          component="img"
+          image={require('./' + card.image_url)}
+          alt={card.title}
           />
-        <Box sx={{ display: 'flex' }}>
-          <Zoom in={checked}>
-            <Box>
-              {/* <!-- the max width of any pokemon image is 592 --> */}
-              <Card variant="outlined" sx={{ maxWidth: 300, height: 650 }}>
-                <CardMedia
-                  component="img"
-                  image={require('./' + card.image_url)}
-                  alt={card.title}
-                />
-                <CardContent>
-                  <Typography variant="body1" color="text.secondary" component="div">
-                    #{card.number_in_set}
-                  </Typography>
-                  <Typography variant="h4" component="div">
-                    {card.title}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Box>  
-          </Zoom>
+        <CardContent>
+          <Typography variant="body1" color="text.secondary" component="div">
+            #{card.number_in_set}
+          </Typography>
+          <Typography variant="h4" component="div">
+            {card.title}
+          </Typography>
+        </CardContent>
+      </Card>
+    </Box>
+    <div class={card.number_in_set}>
+      <Button onClick={(e) => handleClick(card)}>#{card.number_in_set} {card.title}</Button>
+      <Modal
+        sx={style}
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+
+        <Box sx={style}>
+          {/* <!-- the max width of any pokemon image is 592 --> */}
+          <Card variant="outlined" sx={{ maxWidth: 300, height: 650 }}>
+            <CardMedia
+              component="img"
+              image={require('./' + card.image_url)}
+              alt={card.title}
+            />
+            <CardContent>
+              <Typography variant="body1" color="text.secondary" component="div">
+                #{card.number_in_set}
+              </Typography>
+              <Typography variant="h4" component="div">
+                {card.title}
+              </Typography>
+            </CardContent>
+          </Card>
         </Box>
-      </Box>
+      </Modal>
+    </div>
+
     </Grid>
   );
 

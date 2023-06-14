@@ -7,6 +7,13 @@ import sqlite3
 CardSet = namedtuple('CardSet', ['id', 'code', 'name', 'description'])
 Card = namedtuple('Card', ['id', 'number_in_set', 'title', 'image_url', 'description', 'card_set_id'])
 
+def truncate_tables(conn):
+    print('truncating')
+    cur = conn.cursor()
+    cur.execute('DELETE FROM cards;')
+    cur.execute('DELETE FROM card_sets;')
+    conn.commit()
+
 def insert_card_set(conn, card_set: CardSet):
     print('inserting', card_set)
     sql = 'INSERT INTO card_sets(id, code, name, description) VALUES(?,?,?,?)'
@@ -27,6 +34,7 @@ def run(dirpath):
     conn = sqlite3.connect('./db/main.db')
 
     code = os.path.dirname(dirpath)
+    truncate_tables(conn)
     insert_card_set(conn, CardSet(0, code, code, ''))
 
     for rootdir, dirs, files in os.walk(dirpath):

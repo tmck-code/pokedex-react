@@ -29,19 +29,42 @@ const style = {
   }
 };
 
+function CardModal(image, open, handleClose) {
+  return (
+    <Modal
+      sx={style}
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={style}>
+        {/* <!-- the max width of any pokemon image is 592 --> */}
+        <Card variant="outlined" sx={{ maxWidth: 300, height: 650 }}>
+          <CardMedia
+            component="img"
+            image={require('./' + image)}
+            alt="pokemon"
+          />
+        </Card>
+      </Box>
+    </Modal>
+  );
+};
 
 function Cards() {
-  const [data, setData] = useState([])
-  const [open, setOpen] = React.useState(false);
+  const [data, setData] = useState([]);
+  const [open, setOpen] = useState(false);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const [image, setCard] = useState("false");
+  const [image, setCard] = useState(true);
 
   const handleClick = (value) => {
     setCard(value);
-    setOpen(true);
-    console.log(image);
+    handleOpen();
+    console.log(value, image, open);
   };
 
 
@@ -56,63 +79,34 @@ function Cards() {
       fetchData()
   }, [])
 
-  const listCards = data.map((card) =>
-    <Grid>
-    <Box>
-      {/* <!-- the max width of any pokemon image is 592 --> */}
-      <Card variant="outlined" sx={{ maxWidth: 300, height: 650 }}>
-        <CardMedia
-          component="img"
-          image={require('./' + card.image_url)}
-          alt={card.title}
-          />
-        <CardContent>
-          <Typography variant="body1" color="text.secondary" component="div">
-            #{card.number_in_set}
-          </Typography>
-          <Typography variant="h4" component="div">
-            {card.title}
-          </Typography>
-        </CardContent>
-      </Card>
-    </Box>
-    <div class={card.number_in_set}>
-      <Button onClick={(e) => handleClick(card)}>#{card.number_in_set} {card.title}</Button>
-      <Modal
-        sx={style}
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-
-        <Box sx={style}>
-          {/* <!-- the max width of any pokemon image is 592 --> */}
-          <Card variant="outlined" sx={{ maxWidth: 300, height: 650 }}>
-            <CardMedia
-              component="img"
-              image={require('./' + card.image_url)}
-              alt={card.title}
+  const listCards = data.map((card) => (
+    <Grid key={card.number_in_set}>
+      <Box>
+        {/* <!-- the max width of any pokemon image is 592 --> */}
+        <Card variant="outlined" sx={{ maxWidth: 300, height: 650 }}>
+          <CardMedia
+            component="img"
+            image={require('./' + card.image_url)}
+            alt={card.title}
             />
-            <CardContent>
-              <Typography variant="body1" color="text.secondary" component="div">
-                #{card.number_in_set}
-              </Typography>
-              <Typography variant="h4" component="div">
-                {card.title}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Box>
-      </Modal>
-    </div>
-
+          <CardContent>
+            <Typography variant="body1" color="text.secondary" component="div">
+              #{card.number_in_set}
+            </Typography>
+            <Typography variant="h4" component="div">
+              {card.title}
+            </Typography>
+          </CardContent>
+        </Card>
+      </Box>
+      <Button onClick={(e) => handleClick(card.image_url)}>#{card.number_in_set} {card.title}</Button>
     </Grid>
-  );
+  ));
 
   return (
     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
       {listCards}
+      {open && CardModal(image, open, handleClose)}
     </Grid>
   );
 }

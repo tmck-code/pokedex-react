@@ -39,13 +39,8 @@ function CardModal(image, open, handleClose) {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        {/* <!-- the max width of any pokemon image is 592 --> */}
-        <Card variant="outlined" sx={{ maxWidth: 300, height: 650 }}>
-          <CardMedia
-            component="img"
-            image={require('./' + image)}
-            alt="pokemon"
-          />
+        <Card variant="outlined">
+          <CardMedia component="img" image={require('./' + image)} alt="pokemon" />
         </Card>
       </Box>
     </Modal>

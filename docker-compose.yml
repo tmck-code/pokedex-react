@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+
+  app:
+    image: tmck-code/pokedex-react:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    volumes:
+      - ./db/:/db/

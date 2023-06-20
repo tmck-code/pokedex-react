@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from . import models, schemas
 
 
-def get_set(db: Session, card_set_id: int):
+def get_card_set(db: Session, card_set_id: int):
     return db.query(models.CardSet).filter(models.CardSet.id == card_set_id).first()
 
 

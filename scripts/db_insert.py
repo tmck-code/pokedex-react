@@ -4,8 +4,8 @@ import os, sys
 from collections import namedtuple
 import sqlite3
 
-CardSet = namedtuple('CardSet', ['id', 'code', 'name', 'description'])
-Card = namedtuple('Card', ['id', 'number_in_set', 'title', 'image_url', 'description', 'card_set_id'])
+CardSet = namedtuple('CardSet', ['code', 'name', 'description'])
+Card = namedtuple('Card', ['number_in_set', 'title', 'image_url', 'description', 'card_set_id'])
 
 def truncate_tables(conn):
     print('truncating')
@@ -16,7 +16,7 @@ def truncate_tables(conn):
 
 def insert_card_set(conn, card_set: CardSet):
     print('inserting', card_set)
-    sql = 'INSERT INTO card_sets(id, code, name, description) VALUES(?,?,?,?)'
+    sql = 'INSERT INTO card_sets(code, name, description) VALUES(?,?,?)'
     cur = conn.cursor()
     cur.execute(sql, card_set)
     conn.commit()
@@ -24,7 +24,7 @@ def insert_card_set(conn, card_set: CardSet):
 
 def insert_card(conn, card: Card):
     print('inserting', card)
-    sql = 'INSERT INTO cards(id, number_in_set, title, image_url, description, card_set_id) VALUES(?,?,?,?,?,?)'
+    sql = 'INSERT INTO cards(number_in_set, title, image_url, description, card_set_id) VALUES(?,?,?,?,?)'
     cur = conn.cursor()
     cur.execute(sql, card)
     conn.commit()
@@ -35,7 +35,7 @@ def run(dirpath):
 
     code = os.path.dirname(dirpath)
     truncate_tables(conn)
-    insert_card_set(conn, CardSet(0, code, code, ''))
+    insert_card_set(conn, CardSet(code, code, ''))
 
     for rootdir, dirs, files in os.walk(dirpath):
         for i, filename in enumerate(files):
@@ -47,7 +47,7 @@ def run(dirpath):
             image_url = os.path.join(rootdir, filename)
 
             card = Card(
-                i, int(number_in_set), name.replace('_', ' '), image_url, '', 0
+                int(number_in_set), name.replace('_', ' '), image_url, '', 0
             )
             insert_card(conn, card)
 

@@ -36,7 +36,7 @@ def create_set(set: schemas.CardSetCreate, db: Session = Depends(get_db)):
     db_set = crud.get_set_by_code(db, code=set.code)
     if db_set:
         raise HTTPException(status_code=400, detail="Email already registered")
-    return crud.create_set(db=db, set=set)
+    return crud.create_card_set(db=db, set=set)
 
 
 @app.get("/card_sets/", response_model=list[schemas.CardSet])

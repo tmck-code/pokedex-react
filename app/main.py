@@ -45,21 +45,20 @@ def read_card_sets(skip: int = 0, limit: int = 100, db: Session = Depends(get_db
     return card_sets
 
 
-@app.get("/card_sets/{card_set_id}", response_model=schemas.CardSet)
-def read_set(card_set_id: int, db: Session = Depends(get_db)):
-    db_card_set = crud.get_card_set(db, card_set_id=card_set_id)
+@app.get("/card_sets/{card_set_code}", response_model=schemas.CardSet)
+def read_set(card_set_code: str, db: Session = Depends(get_db)):
+    db_card_set = crud.get_card_set(db, card_set_code=card_set_code)
     if db_card_set is None:
         raise HTTPException(status_code=404, detail="CardSet not found")
     return db_card_set
 
 
-@app.post("/card_sets/{card_set_id}/cards/", response_model=schemas.Card)
-def create_card_for_set(card_set_id: int, card: schemas.CardCreate, db: Session = Depends(get_db)):
-    return crud.create_card(db=db, card=card, card_set_id=card_set_id)
+@app.post("/card_sets/{card_set_code}/cards/", response_model=schemas.Card)
+def create_card_for_set(card_set_code: str, card: schemas.CardCreate, db: Session = Depends(get_db)):
+    return crud.create_card(db=db, card=card, card_set_code=card_set_code)
 
 
 @app.get("/cards/", response_model=list[schemas.Card])
 def read_cards(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     cards = crud.get_cards(db, skip=skip, limit=limit)
     return sorted(cards, key=lambda x: x.number_in_set)
-

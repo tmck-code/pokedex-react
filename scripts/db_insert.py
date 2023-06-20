@@ -24,7 +24,7 @@ def insert_card_set(conn, card_set: CardSet):
 
 def insert_card(conn, card: Card):
     print('inserting', card)
-    sql = 'INSERT INTO cards(number_in_set, title, image_url, description, card_set_id) VALUES(?,?,?,?,?)'
+    sql = 'INSERT INTO cards(number_in_set, title, image_url, description, card_set_code) VALUES(?,?,?,?,?)'
     cur = conn.cursor()
     cur.execute(sql, card)
     conn.commit()
@@ -33,7 +33,8 @@ def insert_card(conn, card: Card):
 def run(dirpath):
     conn = sqlite3.connect('./db/main.db')
 
-    code = os.path.dirname(dirpath)
+    code = os.path.dirname('SV2A/').split('/')[-1]
+    print('inserting cards for set', code, 'from', dirpath)
     truncate_tables(conn)
     insert_card_set(conn, CardSet(code, code, ''))
 
@@ -47,7 +48,7 @@ def run(dirpath):
             image_url = os.path.join(rootdir, filename)
 
             card = Card(
-                int(number_in_set), name.replace('_', ' '), image_url, '', 0
+                int(number_in_set), name.replace('_', ' '), image_url, '', code
             )
             insert_card(conn, card)
 

@@ -11,7 +11,7 @@ class CardBase(BaseModel):
 class CardCreate(CardBase): pass
 
 class Card(CardBase):
-    card_set_id: int
+    card_set_code: str
 
     class Config:
         orm_mode = True

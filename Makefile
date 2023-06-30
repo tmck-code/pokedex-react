@@ -5,16 +5,18 @@ web/build:
 	npm install
 	npm run build
 
-serve:
-	docker-compose run -p 8000:8000 -v $(PWD):/app -d app
+web/serve:
 	npm start
 
-poc_files:
-	./scripts/scraper.py 'https://jp.pokellector.com/VMAX-Climax-Expansion/'
-	./scripts/db_insert.py S8B
-	cp -Rv ./S8B ./src/
+docker/serve:
+	docker-compose run -p 8000:8000 -v $(PWD):/app -d app
 
-poc: poc_files web/build serve
+poc/files:
+	./scripts/scraper.py 'https://jp.pokellector.com/Pokemon-151-Expansion/' 'cards'
+	./scripts/db_insert.py 'cards'
+	cp -R ./cards ./src/
+
+poc/docker: poc/files web/build docker/serve web/serve
 
 
-.PHONY: build serve web/build poc poc_files
+.PHONY: build web/serve docker/serve web/build poc/docker poc/files

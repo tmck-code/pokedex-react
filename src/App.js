@@ -25,6 +25,7 @@ import Cloud from '@mui/icons-material/Cloud';
 // import { Theme } from '@mui/material/styles';
 // Modal
 import Button from '@mui/material/Button';
+import ButtonBase from '@mui/material/ButtonBase';
 import Modal from '@mui/material/Modal';
 
 
@@ -40,6 +41,7 @@ const style = {
   }
 };
 
+// <Button onClick={(e) => handleClick(card.image_url)}>#{card.number_in_set}</Button>
 function CardModal(image, open, handleClose) {
   return (
     <Modal
@@ -87,25 +89,23 @@ function Cards() {
 
   const listCards = data.map((card) => (
     <Grid key={card.number_in_set}>
+      <ButtonBase
+        className={card.number_in_set}
+        onClick={event => handleClick(card.image_url)}
+      >
       <Box>
-        {/* <!-- the max width of any pokemon image is 592 --> */}
-        <Card variant="outlined" sx={{ maxWidth: 300, height: 650 }}>
+        <Card variant="outlined" sx={{ maxWidth: 300, maxHeight: 650 }}>
           <CardMedia
             component="img"
             image={require('./' + card.image_url)}
             alt={card.title}
             />
           <CardContent>
-            <Typography variant="body1" color="text.secondary" component="div">
-              #{card.number_in_set}
-            </Typography>
-            <Typography variant="h4" component="div">
-              {card.title}
-            </Typography>
+            <Typography variant="h5" component="div">#{card.number_in_set}: {card.title}</Typography>
           </CardContent>
         </Card>
       </Box>
-      <Button onClick={(e) => handleClick(card.image_url)}>#{card.number_in_set} {card.title}</Button>
+        </ButtonBase>
     </Grid>
   ));
 
@@ -117,10 +117,9 @@ function Cards() {
   );
 }
 
-
 function IconMenu() {
   return (
-    <Paper sx={{ width: 320, maxWidth: '100%' }}>
+    <Paper sx={{ width: '100%', maxWidth: '100%' }}>
       <MenuList>
         <MenuItem>
           <ListItemIcon>

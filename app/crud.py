@@ -4,6 +4,7 @@ from . import models, schemas
 
 
 def get_card_set(db: Session, card_set_code: str):
+    print(db.query(models.CardSet))
     return db.query(models.CardSet).filter(models.CardSet.code == card_set_code).first()
 
 
@@ -21,6 +22,9 @@ def create_card_set(db: Session, card_set: schemas.CardSetCreate):
 
 def get_cards(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Card).offset(skip).limit(limit).all()
+
+def get_set_cards(db: Session, card_set_code: str, skip: int = 0, limit: int = 100):
+    return db.query(models.Card).filter(models.Card.card_set_code == card_set_code).offset(skip).limit(limit).all()
 
 
 def create_card(db: Session, card: schemas.CardCreate, card_set_code: str):

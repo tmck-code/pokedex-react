@@ -42,12 +42,15 @@ def create_set(set: schemas.CardSetCreate, db: Session = Depends(get_db)):
 @app.get("/card_sets/", response_model=list[schemas.CardSet])
 def read_card_sets(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     card_sets = crud.get_card_sets(db, skip=skip, limit=limit)
+    for card_set in card_sets:
+        print(card_set.__dict__)
     return card_sets
 
 
 @app.get("/card_sets/{card_set_code}", response_model=schemas.CardSet)
 def read_set(card_set_code: str, db: Session = Depends(get_db)):
     db_card_set = crud.get_card_set(db, card_set_code=card_set_code)
+    print(db_card_set.__dict__)
     if db_card_set is None:
         raise HTTPException(status_code=404, detail="CardSet not found")
     return db_card_set
@@ -59,6 +62,10 @@ def create_card_for_set(card_set_code: str, card: schemas.CardCreate, db: Sessio
 
 
 @app.get("/cards/", response_model=list[schemas.Card])
-def read_cards(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def read_cards(skip: int = 0, limit: int = 300, db: Session = Depends(get_db)):
     cards = crud.get_cards(db, skip=skip, limit=limit)
     return sorted(cards, key=lambda x: x.number_in_set)
+
+@app.get("/card_sets/{card_set_code}/all", response_model=list[schemas.Card])
+def read_set_cards(card_set_code: str, db: Session = Depends(get_db)):
+    return crud.get_set_cards(db, card_set_code=card_set_code)

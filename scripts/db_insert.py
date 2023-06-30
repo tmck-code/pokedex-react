@@ -30,10 +30,8 @@ def insert_card(conn, card: Card):
     conn.commit()
     return cur.lastrowid
 
-def run(dirpath):
-    conn = sqlite3.connect('./db/main.db')
-
-    code = os.path.dirname('SV2A/').split('/')[-1]
+def insert_cards_from_dir(dirpath, conn):
+    code = os.path.split(os.path.abspath(dirpath))[-1]
     print('inserting cards for set', code, 'from', dirpath)
     truncate_tables(conn)
     insert_card_set(conn, CardSet(code, code, ''))
@@ -51,6 +49,15 @@ def run(dirpath):
                 int(number_in_set), name.replace('_', ' '), image_url, '', code
             )
             insert_card(conn, card)
+
+def run(dirpath):
+    conn = sqlite3.connect('./db/main.db')
+    for rootdir, dirs, files in os.walk(dirpath):
+        for dirname in dirs:
+            print('inserting cards from', os.path.join(rootdir, dirname))
+            insert_cards_from_dir(os.path.join(rootdir, dirname), conn)
+    conn.commit()
+
 
 if __name__ == '__main__':
     run(sys.argv[1])

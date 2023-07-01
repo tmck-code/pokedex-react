@@ -17,7 +17,7 @@ const style = {
     backgroundcolor: "red"
   }
 };
-  
+
 // <Button onClick={(e) => handleClick(card.image_url)}>#{card.number_in_set}</Button>
 function CardModal(image, open, handleClose) {
   return (
@@ -36,7 +36,7 @@ function CardModal(image, open, handleClose) {
     </Modal>
   );
 };
-  
+
 export default function Cards() {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
@@ -54,7 +54,7 @@ export default function Cards() {
 
 
   const fetchData = async ()=>{
-    let res = await fetch('http://localhost:8000/cards/')
+    let res = await fetch('http://localhost:8000/card_sets/SV2A/cards/')
     let data = await res.json()
     console.log('response', data)
     setData(data)
@@ -85,7 +85,7 @@ export default function Cards() {
       </ButtonBase>
     </Grid>
   ));
-  
+
   return (
     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
       {listCards}

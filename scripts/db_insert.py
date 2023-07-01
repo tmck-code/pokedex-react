@@ -33,7 +33,6 @@ def insert_card(conn, card: Card):
 def insert_cards_from_dir(dirpath, conn):
     code = os.path.split(os.path.abspath(dirpath))[-1]
     print('inserting cards for set', code, 'from', dirpath)
-    truncate_tables(conn)
     insert_card_set(conn, CardSet(code, code, ''))
 
     for rootdir, dirs, files in os.walk(dirpath):
@@ -52,6 +51,7 @@ def insert_cards_from_dir(dirpath, conn):
 
 def run(dirpath):
     conn = sqlite3.connect('./db/main.db')
+    truncate_tables(conn)
     for rootdir, dirs, files in os.walk(dirpath):
         for dirname in dirs:
             print('inserting cards from', os.path.join(rootdir, dirname))

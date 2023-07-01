@@ -13,6 +13,8 @@ docker/serve:
 
 poc/files:
 	./scripts/scraper.py 'https://jp.pokellector.com/Pokemon-151-Expansion/' 'cards'
+	./scripts/scraper.py 'https://jp.pokellector.com/Violet-ex-Expansion/' 'cards'
+	./scripts/scraper.py 'https://jp.pokellector.com/Snow-Hazard-Expansion/' 'cards'
 	./scripts/db_insert.py 'cards'
 	cp -R ./cards ./src/
 

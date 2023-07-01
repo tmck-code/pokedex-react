@@ -61,11 +61,12 @@ def create_card_for_set(card_set_code: str, card: schemas.CardCreate, db: Sessio
     return crud.create_card(db=db, card=card, card_set_code=card_set_code)
 
 
+@app.get("/card_sets/{card_set_code}/cards/", response_model=list[schemas.Card])
+def read_set_cards(card_set_code: str, db: Session = Depends(get_db)):
+    return crud.get_set_cards(db, card_set_code=card_set_code)
+
+
 @app.get("/cards/", response_model=list[schemas.Card])
 def read_cards(skip: int = 0, limit: int = 300, db: Session = Depends(get_db)):
     cards = crud.get_cards(db, skip=skip, limit=limit)
     return sorted(cards, key=lambda x: x.number_in_set)
-
-@app.get("/card_sets/{card_set_code}/all", response_model=list[schemas.Card])
-def read_set_cards(card_set_code: str, db: Session = Depends(get_db)):
-    return crud.get_set_cards(db, card_set_code=card_set_code)

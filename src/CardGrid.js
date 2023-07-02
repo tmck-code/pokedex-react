@@ -37,7 +37,7 @@ function CardModal(image, open, handleClose) {
   );
 };
 
-export default function Cards() {
+export default function Cards(params) {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
 
@@ -46,6 +46,9 @@ export default function Cards() {
 
   const [image, setCard] = useState(true);
 
+  const card_set_code = params['card_set_code']
+  console.log('card_set_code:', params['card_set_code'])
+
   const handleClick = (value) => {
     setCard(value);
     handleOpen();
@@ -53,8 +56,8 @@ export default function Cards() {
   };
 
 
-  const fetchData = async ()=>{
-    let res = await fetch('http://localhost:8000/card_sets/SV2A/cards/')
+  const fetchData = async () => {
+    let res = await fetch('http://localhost:8000/card_sets/' + card_set_code + '/cards/')
     let data = await res.json()
     console.log('response', data)
     setData(data)

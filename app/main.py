@@ -32,7 +32,7 @@ def get_db():
 
 
 @app.get("/cards/", response_model=list[schemas.Card])
-def read_cards(skip: int = 0, limit: int = 300, db: Session = Depends(get_db)):
+def read_cards(skip: int = 0, limit: int = 500, db: Session = Depends(get_db)):
     cards = crud.get_cards(db, skip=skip, limit=limit)
     return sorted(cards, key=lambda x: x.number_in_set)
 
@@ -46,7 +46,7 @@ def create_set(set: schemas.CardSetCreate, db: Session = Depends(get_db)):
 
 
 @app.get("/card_sets/", response_model=list[schemas.CardSet])
-def read_card_sets(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def read_card_sets(skip: int = 0, limit: int = 400, db: Session = Depends(get_db)):
     card_sets = crud.get_card_sets(db, skip=skip, limit=limit)
     for card_set in card_sets:
         print(card_set.__dict__)

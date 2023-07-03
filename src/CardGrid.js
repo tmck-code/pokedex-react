@@ -20,54 +20,52 @@ const style = {
   }
 };
 
-// <Button  ={(e) => handleClick(card.image_url)}>#{card.number_in_set}</Button>
-function CardModal(image, open, handleClose) {
+/**
+ * The is the modal that pops up when a card is clicked, showing a larger image of the card
+ */
+function CardModal(card, handleClose) {
+  console.log(`[CardModal] '${card}'`)
   return (
     <Modal
       sx={style}
-      open={open}
+      open={card !== false}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
         <Card variant="outlined">
-          <CardMedia component="img" image={require('./' + image)} alt="pokemon" />
+          <CardMedia component="img" image={require('./' + card)} alt="pokemon" />
         </Card>
       </Box>
     </Modal>
   );
 };
 
+/**
+ * This is the card grid that displays all the cards in the selected set,
+ * and the modal that displays larger images of the cards.
+*/
 export default function Cards(params) {
-  const [data, setData] = useState([]);
-  const [open, setOpen] = useState(false);
+  const [cards, setCards] = useState([]);
+  const [modalCard, setModalCard] = useState(false);
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const [image, setCard] = useState(true);
+  const handleModalClose = () => setModalCard(false);  
+  const handleClick = (value) => setModalCard(value);
 
   const card_set_code = params['card_set_code']
-  console.log('card_set_code:', params['card_set_code'])
-
-  const handleClick = (value) => {
-    setCard(value);
-    handleOpen();
-    console.log(value, image, open);
-  };
 
   useEffect(() => {
-      fetchCards(card_set_code).then((data) => {
-        setData(data);
-      });
-  }, [])
+    fetchCards(card_set_code).then((data) => {
+      setCards(data);
+    });
+  }, [card_set_code])
 
-  const listCards = data.map((card) => (
+  const listCards = cards.map((card) => (
     <Grid key={"grid-"+card.number_in_set+"-"+card.title}>
       <ButtonBase
         key={"button-"+card.number_in_set+"-"+card.title}
-        onClick={event => handleClick(card.image_url)}
+        onClick={(event) => handleClick(card.image_url)}
       >
       <Box>
         <Card variant="outlined" sx={{ maxWidth: 300, maxHeight: 650 }}>
@@ -88,7 +86,7 @@ export default function Cards(params) {
   return (
     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
       {listCards}
-      {open && CardModal(image, open, handleClose)}
+      {modalCard && CardModal(modalCard, handleModalClose)}
     </Grid>
   );
 }

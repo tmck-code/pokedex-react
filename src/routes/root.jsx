@@ -11,9 +11,8 @@ export default function Root() {
       });
   }, [])
 
-  console.log('data', data)
   const listCardSets = data.map((card_set) => (
-    <li> <a href={card_set.name + `/`}>{card_set.name}</a> </li>
+    <li key={`menu-card-${card_set.code}`}> <a href={card_set.name + `/`}>{card_set.name}</a> </li>
   ));
 
   return (

@@ -1,18 +1,13 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
-import ArchiveIcon from '@mui/icons-material/Archive';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import EditIcon from '@mui/icons-material/Edit';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
 import InputBase from '@mui/material/InputBase';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import Menu, { MenuProps } from '@mui/material/Menu';
+import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import SearchIcon from '@mui/icons-material/Search';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -64,7 +59,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 
-const StyledMenu = styled((props: MenuProps) => (
+const StyledMenu = styled((props) => (
   <Menu
     elevation={0}
     anchorOrigin={{
@@ -160,6 +155,12 @@ export default function SearchAppBar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar component="nav">
         <Toolbar>
+
+          {/* This is the "Card Sets" drop-down menu that allows the user to select which set to view. */}
+          <CardSetDropDown />
+
+          {/* TODO: Implement this. */}
+          {/* This is the main search bar, which filters the cards in the current set by the user's input. */}
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -169,8 +170,9 @@ export default function SearchAppBar() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
-          <CardSetDropDown />
 
+
+          {/* This is the basic title of the website, displayed at the top-right of the page. */}
           <Typography
             variant="h6"
             noWrap

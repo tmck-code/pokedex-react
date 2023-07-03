@@ -153,7 +153,7 @@ function CardSetDropDown() {
 export default function SearchAppBar() {
   return (
     <Box sx={{ flexGrow: 1, padding: '40px' }}>
-      <AppBar component="absolute">
+      <AppBar component='nav'>
         <Toolbar>
 
           {/* This is the "Card Sets" drop-down menu that allows the user to select which set to view. */}

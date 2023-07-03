@@ -44,10 +44,17 @@ def insert_cards_from_dir(dirpath, conn):
             number_in_set, name = base.split('_')
             image_url = os.path.join(rootdir, filename)
 
-            card = Card(
-                int(number_in_set), name.replace('_', ' '), image_url, '', code
-            )
-            insert_card(conn, card)
+            if not number_in_set.isdigit():
+                print('skipping card with invalid number', filename)
+                continue
+
+            insert_card(conn, Card(
+                number_in_set = int(number_in_set),
+                title         = name.replace('_', ' '),
+                image_url     = image_url,
+                description   = '',
+                card_set_id   = code,
+            ))
 
 def run(dirpath):
     conn = sqlite3.connect('./db/main.db')

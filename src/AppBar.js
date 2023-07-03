@@ -145,8 +145,8 @@ function CardSetDropDown() {
         open={open}
         onClose={handleClose}
       >
-      {cardSets.map((cardSet) => (
-        <MenuItem onClick={handleClose} disableRipple>
+      {cardSets.map((cardSet, idx) => (
+        <MenuItem onClick={handleClose} key={"menu-"+idx} disableRipple>
           <Link href={"/"+cardSet.code}>{cardSet.code}</Link>
         </MenuItem>
       ))}

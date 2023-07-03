@@ -23,9 +23,11 @@ def create_card_set(db: Session, card_set: schemas.CardSetCreate):
 def get_cards(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Card).offset(skip).limit(limit).all()
 
-def get_set_cards(db: Session, card_set_code: str, skip: int = 0, limit: int = 100):
-    return db.query(models.Card).filter(models.Card.card_set_code == card_set_code).offset(skip).limit(limit).all()
-
+def get_set_cards(db: Session, card_set_code: str, filter_name: str = None, skip: int = 0, limit: int = 100):
+    query = db.query(models.Card).filter(models.Card.card_set_code == card_set_code)
+    if filter_name:
+        query = query.filter(models.Card.title.ilike(f'%{filter_name}%'))
+    return query.offset(skip).limit(limit).all()
 
 def create_card(db: Session, card: schemas.CardCreate, card_set_code: str):
     db_card = models.Card(**card.dict(), card_set_code=card_set_code)

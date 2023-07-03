@@ -61,8 +61,8 @@ def read_set(card_set_code: str, db: Session = Depends(get_db)):
     return db_card_set
 
 @app.get("/card_sets/{card_set_code}/cards/", response_model=list[schemas.Card])
-def read_set_cards(card_set_code: str, db: Session = Depends(get_db)):
-    cards = crud.get_set_cards(db, card_set_code=card_set_code)
+def read_set_cards(card_set_code: str, filter_name: str = None, db: Session = Depends(get_db)):
+    cards = crud.get_set_cards(db, card_set_code=card_set_code, filter_name=filter_name)
     return sorted(cards, key=lambda x: x.number_in_set)
 
 @app.post("/card_sets/{card_set_code}/cards/", response_model=schemas.Card)

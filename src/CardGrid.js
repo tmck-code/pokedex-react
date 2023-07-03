@@ -9,6 +9,8 @@ import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 
+import fetchCards from './CardAPI.js';
+
 const style = {
   display: "flex",
   alignItems: "center",
@@ -18,7 +20,7 @@ const style = {
   }
 };
 
-// <Button onClick={(e) => handleClick(card.image_url)}>#{card.number_in_set}</Button>
+// <Button  ={(e) => handleClick(card.image_url)}>#{card.number_in_set}</Button>
 function CardModal(image, open, handleClose) {
   return (
     <Modal
@@ -55,16 +57,10 @@ export default function Cards(params) {
     console.log(value, image, open);
   };
 
-
-  const fetchData = async () => {
-    let res = await fetch('http://localhost:8000/card_sets/' + card_set_code + '/cards/')
-    let data = await res.json()
-    console.log('response', data)
-    setData(data)
-  }
-
   useEffect(() => {
-      fetchData()
+      fetchCards(card_set_code).then((data) => {
+        setData(data);
+      });
   }, [])
 
   const listCards = data.map((card) => (

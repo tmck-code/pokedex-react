@@ -1,17 +1,14 @@
 import { useState, useEffect } from 'react';
 
-export default function Root() {
+import * as API from '../CardAPI';
 
+export default function Root() {
   const [data, setData] = useState([]);
-  const fetchData = async ()=>{
-    let res = await fetch('http://localhost:8000/card_sets/')
-    let response = await res.json()
-    console.log('response', response)
-    setData(response)
-  }
 
   useEffect(() => {
-      fetchData()
+      API.fetchCardSets().then((data) => {
+        setData(data);
+      });
   }, [])
 
   console.log('data', data)

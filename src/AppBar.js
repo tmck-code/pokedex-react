@@ -30,7 +30,7 @@ const Search = styled('div')(({ theme }) => ({
     width: 'auto',
   },
 }));
-  
+
 const SearchIconWrapper = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 2),
   height: '100%',
@@ -40,7 +40,7 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
 }));
-  
+
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
@@ -57,7 +57,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
-
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -150,7 +149,7 @@ function CardSetDropDown() {
   );
 }
 
-export default function SearchAppBar() {
+export default function SearchAppBar({ callback }) {
   return (
     <Box sx={{ flexGrow: 1, padding: '40px' }}>
       <AppBar component='nav'>
@@ -168,6 +167,7 @@ export default function SearchAppBar() {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
+	      onChange={(e) => callback(e.target.value)}
             />
           </Search>
 

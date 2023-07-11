@@ -46,14 +46,14 @@ function CardModal(card, handleClose) {
  * This is the card grid that displays all the cards in the selected set,
  * and the modal that displays larger images of the cards.
 */
-export default function Cards(params) {
+export default function Cards({ card_set_code, search_term }) {
   const [cards, setCards] = useState([]);
   const [modalCard, setModalCard] = useState(false);
 
-  const handleModalClose = () => setModalCard(false);  
+  const handleModalClose = () => setModalCard(false);
   const handleClick = (value) => setModalCard(value);
 
-  const card_set_code = params['card_set_code']
+  console.log('term', search_term);
 
   useEffect(() => {
     fetchCards(card_set_code).then((data) => {
@@ -61,7 +61,9 @@ export default function Cards(params) {
     });
   }, [card_set_code])
 
-  const listCards = cards.map((card) => (
+  const listCards = cards
+  .filter(card => card.title.toLowerCase().includes(search_term.toLowerCase()))
+  .map((card) => (
     <Grid key={"grid-"+card.number_in_set+"-"+card.title}>
       <ButtonBase
         key={"button-"+card.number_in_set+"-"+card.title}

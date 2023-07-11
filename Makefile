@@ -9,7 +9,7 @@ web/serve:
 	npm start
 
 docker/serve:
-	docker-compose run -p 8000:8000 -v $(PWD):/app -d app
+	docker-compose run -p 8000:8000 -v $(PWD):/app app
 
 poc/files:
 	./scripts/scraper.py 'https://jp.pokellector.com/Pokemon-151-Expansion/' 'cards'

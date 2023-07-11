@@ -40,8 +40,9 @@ def insert_cards_from_dir(dirpath, conn):
             if not filename.endswith('.png'):
                 continue
 
+            print('processing image', os.path.join(rootdir, filename))
             base = os.path.splitext(filename)[0]
-            number_in_set, name = base.split('_')
+            number_in_set, name = base.split('_', 1)
             image_url = os.path.join(rootdir, filename)
 
             if not number_in_set.isdigit():

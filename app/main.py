@@ -50,7 +50,7 @@ def read_card_sets(skip: int = 0, limit: int = 400, db: Session = Depends(get_db
     card_sets = crud.get_card_sets(db, skip=skip, limit=limit)
     for card_set in card_sets:
         print(card_set.__dict__)
-    return card_sets
+    return sorted(card_sets, key=lambda x: x.code, reverse=True)
 
 @app.get("/card_sets/{card_set_code}", response_model=schemas.CardSet)
 def read_set(card_set_code: str, db: Session = Depends(get_db)):

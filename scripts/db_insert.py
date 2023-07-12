@@ -4,8 +4,8 @@ import os, sys
 from collections import namedtuple
 import sqlite3
 
-CardSet = namedtuple('CardSet', ['id', 'code', 'name', 'description'])
-Card = namedtuple('Card', ['id', 'number_in_set', 'title', 'image_url', 'description', 'card_set_id'])
+CardSet = namedtuple('CardSet', ['code', 'name', 'description'])
+Card = namedtuple('Card', ['number_in_set', 'title', 'image_url', 'description', 'card_set_id'])
 
 def truncate_tables(conn):
     print('truncating')
@@ -16,7 +16,7 @@ def truncate_tables(conn):
 
 def insert_card_set(conn, card_set: CardSet):
     print('inserting', card_set)
-    sql = 'INSERT INTO card_sets(id, code, name, description) VALUES(?,?,?,?)'
+    sql = 'INSERT INTO card_sets(code, name, description) VALUES(?,?,?)'
     cur = conn.cursor()
     cur.execute(sql, card_set)
     conn.commit()
@@ -24,32 +24,48 @@ def insert_card_set(conn, card_set: CardSet):
 
 def insert_card(conn, card: Card):
     print('inserting', card)
-    sql = 'INSERT INTO cards(id, number_in_set, title, image_url, description, card_set_id) VALUES(?,?,?,?,?,?)'
+    sql = 'INSERT INTO cards(number_in_set, title, image_url, description, card_set_code) VALUES(?,?,?,?,?)'
     cur = conn.cursor()
     cur.execute(sql, card)
     conn.commit()
     return cur.lastrowid
 
-def run(dirpath):
-    conn = sqlite3.connect('./db/main.db')
-
-    code = os.path.dirname(dirpath)
-    truncate_tables(conn)
-    insert_card_set(conn, CardSet(0, code, code, ''))
+def insert_cards_from_dir(dirpath, conn):
+    code = os.path.split(os.path.abspath(dirpath))[-1]
+    print('inserting cards for set', code, 'from', dirpath)
+    insert_card_set(conn, CardSet(code, code, ''))
 
     for rootdir, dirs, files in os.walk(dirpath):
         for i, filename in enumerate(files):
             if not filename.endswith('.png'):
                 continue
 
+            print('processing image', os.path.join(rootdir, filename))
             base = os.path.splitext(filename)[0]
-            number_in_set, name = base.split('_')
+            number_in_set, name = base.split('_', 1)
             image_url = os.path.join(rootdir, filename)
 
-            card = Card(
-                i, int(number_in_set), name.replace('_', ' '), image_url, '', 0
-            )
-            insert_card(conn, card)
+            if not number_in_set.isdigit():
+                print('skipping card with invalid number', filename)
+                continue
+
+            insert_card(conn, Card(
+                number_in_set = int(number_in_set),
+                title         = name.replace('_', ' '),
+                image_url     = image_url,
+                description   = '',
+                card_set_id   = code,
+            ))
+
+def run(dirpath):
+    conn = sqlite3.connect('./db/main.db')
+    truncate_tables(conn)
+    for rootdir, dirs, files in os.walk(dirpath):
+        for dirname in dirs:
+            print('inserting cards from', os.path.join(rootdir, dirname))
+            insert_cards_from_dir(os.path.join(rootdir, dirname), conn)
+    conn.commit()
+
 
 if __name__ == '__main__':
     run(sys.argv[1])

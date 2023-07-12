@@ -11,8 +11,7 @@ class CardBase(BaseModel):
 class CardCreate(CardBase): pass
 
 class Card(CardBase):
-    id: int
-    card_set_id: int
+    card_set_code: str
 
     class Config:
         orm_mode = True
@@ -28,7 +27,6 @@ class CardSetCreate(CardSetBase): pass
 
 
 class CardSet(CardSetBase):
-    id: int
     Cards: list[Card] = []
 
     class Config:

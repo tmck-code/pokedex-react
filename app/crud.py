@@ -3,12 +3,9 @@ from sqlalchemy.orm import Session
 from . import models, schemas
 
 
-def get_set(db: Session, card_set_id: int):
-    return db.query(models.CardSet).filter(models.CardSet.id == card_set_id).first()
-
-
-def get_card_set_by_code(db: Session, code: str):
-    return db.query(models.CardSet).filter(models.CardSet.code == code).first()
+def get_card_set(db: Session, card_set_code: str):
+    print(db.query(models.CardSet))
+    return db.query(models.CardSet).filter(models.CardSet.code == card_set_code).first()
 
 
 def get_card_sets(db: Session, skip: int = 0, limit: int = 100):
@@ -26,9 +23,14 @@ def create_card_set(db: Session, card_set: schemas.CardSetCreate):
 def get_cards(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Card).offset(skip).limit(limit).all()
 
+def get_set_cards(db: Session, card_set_code: str, filter_name: str = None, skip: int = 0, limit: int = 100):
+    query = db.query(models.Card).filter(models.Card.card_set_code == card_set_code)
+    if filter_name:
+        query = query.filter(models.Card.title.ilike(f'%{filter_name}%'))
+    return query.offset(skip).limit(limit).all()
 
-def create_card(db: Session, card: schemas.CardCreate, card_set_id: int):
-    db_card = models.Card(**card.dict(), card_set_id=card_set_id)
+def create_card(db: Session, card: schemas.CardCreate, card_set_code: str):
+    db_card = models.Card(**card.dict(), card_set_code=card_set_code)
     db.add(db_card)
     db.commit()
     db.refresh(db_card)

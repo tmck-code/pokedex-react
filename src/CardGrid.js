@@ -35,7 +35,7 @@ function CardModal(card, handleClose) {
     >
       <Box sx={style}>
         <Card variant="outlined">
-          <CardMedia component="img" image={require('./' + card)} alt="pokemon" />
+          <CardMedia component="img" image={card} alt="pokemon" />
         </Card>
       </Box>
     </Modal>
@@ -61,19 +61,21 @@ export default function Cards({ card_set_code, search_term }) {
     });
   }, [card_set_code])
 
+  const cardImages = cards.map((card) => require('./' + card.image_url));
+
   const listCards = cards
   .filter(card => card.title.toLowerCase().includes(search_term.toLowerCase()))
-  .map((card) => (
+  .map((card, idx) => (
     <Grid key={"grid-"+card.number_in_set+"-"+card.title}>
       <ButtonBase
         key={"button-"+card.number_in_set+"-"+card.title}
-        onClick={(event) => handleClick(card.image_url)}
+        onClick={() => handleClick(cardImages[idx])}
       >
       <Box>
         <Card variant="outlined" sx={{ maxWidth: 300, maxHeight: 650 }}>
           <CardMedia
             component="img"
-            image={require('./' + card.image_url)}
+            image={cardImages[idx]}
             alt={card.title}
             />
           <CardContent>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Box from '@mui/material/Box';
 import ButtonBase from '@mui/material/ButtonBase';
 import Card from '@mui/material/Card';
@@ -61,21 +61,23 @@ export default function Cards({ card_set_code, search_term }) {
     });
   }, [card_set_code])
 
-  const cardImages = cards.map((card) => require('./' + card.image_url));
+  const cardImages = useMemo(() => new Map(
+    cards.map((c) => [c.number_in_set, require('./' + c.image_url)])
+  ), [cards]);
 
   const listCards = cards
   .filter(card => card.title.toLowerCase().includes(search_term.toLowerCase()))
-  .map((card, idx) => (
+  .map((card) => (
     <Grid key={"grid-"+card.number_in_set+"-"+card.title}>
       <ButtonBase
         key={"button-"+card.number_in_set+"-"+card.title}
-        onClick={() => handleClick(cardImages[idx])}
+        onClick={() => handleClick(cardImages.get(card.number_in_set))}
       >
       <Box>
         <Card variant="outlined" sx={{ maxWidth: 300, maxHeight: 650 }}>
           <CardMedia
             component="img"
-            image={cardImages[idx]}
+	    image={cardImages.get(card.number_in_set)}
             alt={card.title}
             />
           <CardContent>

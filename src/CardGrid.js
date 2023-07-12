@@ -53,14 +53,14 @@ export default function Cards({ card_set_code, search_term }) {
   const handleModalClose = () => setModalCard(false);
   const handleClick = (value) => setModalCard(value);
 
-  console.log('term', search_term);
-
   useEffect(() => {
     fetchCards(card_set_code).then((data) => {
       setCards(data);
     });
   }, [card_set_code])
 
+  // create a map of number_in_set -> card image for quick lookup and display
+  // when filtering via the search term or triggering the modal
   const cardImages = useMemo(() => new Map(
     cards.map((c) => [c.number_in_set, require('./' + c.image_url)])
   ), [cards]);
@@ -77,7 +77,7 @@ export default function Cards({ card_set_code, search_term }) {
         <Card variant="outlined" sx={{ maxWidth: 300, maxHeight: 650 }}>
           <CardMedia
             component="img"
-	    image={cardImages.get(card.number_in_set)}
+            image={cardImages.get(card.number_in_set)}
             alt={card.title}
             />
           <CardContent>

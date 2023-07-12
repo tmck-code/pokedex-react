@@ -12,7 +12,7 @@ import { useState } from 'react';
  */
 export default function MyApp() {
   let params = useParams();
-  console.log(`[MyApp] entering main MyApp function, params: ${params}`);
+  // console.log(`[MyApp] entering main MyApp function, params: ${params}`);
 
   const [term, setTerm] = useState('');
 

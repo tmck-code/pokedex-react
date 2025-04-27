@@ -5,6 +5,12 @@ import asyncio
 
 import aiohttp
 import requests
+from bs4 import BeautifulSoup
+from pp import pp
+
+from collections import namedtuple
+SetInfo = namedtuple('Set', 'code url name')
+CardInfo = namedtuple('Card', 'img_url')
 
 async def adownload_image(url, odirname, ofname, i, total):
     print(f'{i}/{total} {ofname:<40s} {url}')
@@ -22,6 +28,7 @@ async def adownload_image(url, odirname, ofname, i, total):
 async def adownload_all_images(urls, odir, total, chunk=10):
     tasks = []
     for i, url in enumerate(urls):
+        print('downloading', url)
         name, set_name, number_in_set, _id, _ext = url.split('/')[-1].split('.')
         ofname = f'{number_in_set}_{name}.png'
         odirpath = os.path.join(odir, set_name)
@@ -35,18 +42,37 @@ async def adownload_all_images(urls, odir, total, chunk=10):
 
     await asyncio.gather(*tasks)
 
-def find_image_urls(html):
-    for i, line in enumerate(html.split('\n')):
-        if 'thumb.png' in line:
-            yield line.split('"')[3].removesuffix('thumb.png') + 'png'
+def find_all_cards(url):
+    print('finding images for url', url)
+    soup = BeautifulSoup(requests.get(url).text, 'html.parser')
+    print('Received response for', url)
+    for i, card in enumerate(soup.find_all('div', {'class': 'card'})):
+        img_url = card.find('img', {'class': "card lazyload"}).attrs['data-src']
+        card_info = CardInfo(**{'img_url': img_url.replace('thumb.png', 'png')})
+        pp.ppd(card_info._asdict(), indent=None)
+        yield card_info
 
-def run(url, odir):
-    response = requests.get(url)
-    urls = list(find_image_urls(response.text))
-    print(f'found {len(urls)} images')
+def find_all_sets(url):
+    print('finding sets for url', url, 'html.parser')
+    soup = BeautifulSoup(requests.get(url).text, 'html.parser')
+    for btn in soup.find_all('a', {'class': 'button'}):
+        info = SetInfo(**{'code': btn.attrs['name'], 'url': f'https://jp.pokellector.com{btn.attrs["href"]}', 'name': btn.attrs['title']})
+        if not info.code.startswith('S'):
+            print('quitting!')
+            break
+        pp.ppd(info._asdict(), indent=None)
+        yield info
 
-    asyncio.run(adownload_all_images(urls, odir=odir, total=len(urls)))
+def run(url, odir='cards'):
+    print('finding all sets, cards & images from', url)
+    for card_set in find_all_sets(url):
+        pp.ppd(card_set._asdict(), indent=None)
+
+        urls = []
+        for card in find_all_cards(card_set.url):
+            urls.append(card.img_url)
+
+        asyncio.run(adownload_all_images(urls, odir=odir, total=len(urls)))
 
 if __name__ == '__main__':
-    url, odir = sys.argv[1:]
-    run(url, odir)
+    run('https://jp.pokellector.com/sets/')

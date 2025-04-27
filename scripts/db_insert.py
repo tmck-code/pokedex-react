@@ -61,6 +61,7 @@ def run(dirpath):
     conn = sqlite3.connect('./db/main.db')
     truncate_tables(conn)
     for rootdir, dirs, files in os.walk(dirpath):
+        print('processing', rootdir)
         for dirname in dirs:
             print('inserting cards from', os.path.join(rootdir, dirname))
             insert_cards_from_dir(os.path.join(rootdir, dirname), conn)

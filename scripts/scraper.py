@@ -25,11 +25,15 @@ async def adownload_image(url, odirname, ofname, i, total):
             print('error, retrying', url, e)
             await asyncio.sleep(2)
 
-async def adownload_all_images(urls, odir, total, chunk=10):
+async def adownload_all_images(urls, card_set_url, odir, total, chunk=10):
     tasks = []
+    print('downloading', card_set_url)
     for i, url in enumerate(urls):
-        print('downloading', url)
-        name, set_name, number_in_set, _id, _ext = url.split('/')[-1].split('.')
+        try:
+            name, set_name, number_in_set, _id, _ext = url.split('/')[-1].split('.')
+        except ValueError:
+            print('error parsing url, skipping', url)
+            continue
         ofname = f'{number_in_set}_{name}.png'
         odirpath = os.path.join(odir, set_name)
         os.makedirs(odirpath, exist_ok=True)
@@ -57,6 +61,8 @@ def find_all_sets(url):
     soup = BeautifulSoup(requests.get(url).text, 'html.parser')
     for btn in soup.find_all('a', {'class': 'button'}):
         info = SetInfo(**{'code': btn.attrs['name'], 'url': f'https://jp.pokellector.com{btn.attrs["href"]}', 'name': btn.attrs['title']})
+        if info.code != 'SVP':
+            continue
         if not info.code.startswith('S'):
             print('quitting!')
             break
@@ -72,7 +78,7 @@ def run(url, odir='cards'):
         for card in find_all_cards(card_set.url):
             urls.append(card.img_url)
 
-        asyncio.run(adownload_all_images(urls, odir=odir, total=len(urls)))
+        asyncio.run(adownload_all_images(urls, card_set.url, odir=odir, total=len(urls)))
 
 if __name__ == '__main__':
     run('https://jp.pokellector.com/sets/')

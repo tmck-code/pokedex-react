@@ -59,26 +59,21 @@ export default function Cards({ card_set_code, search_term }) {
     });
   }, [card_set_code])
 
-  // create a map of number_in_set -> card image for quick lookup and display
-  // when filtering via the search term or triggering the modal
-  const cardImages = useMemo(() => new Map(
-    cards.map((c) => [c.number_in_set, require('./' + c.image_url)])
-  ), [cards]);
-
   const listCards = cards
   .filter(card => card.title.toLowerCase().includes(search_term.toLowerCase()))
   .map((card) => (
     <Grid key={"grid-"+card.number_in_set+"-"+card.title}>
       <ButtonBase
         key={"button-"+card.number_in_set+"-"+card.title}
-        onClick={() => handleClick(cardImages.get(card.number_in_set))}
+        onClick={() => handleClick(card.image_url)}
       >
       <Box>
         <Card variant="outlined" sx={{ maxWidth: 300, maxHeight: 650 }}>
           <CardMedia
             component="img"
-            image={cardImages.get(card.number_in_set)}
+            image={card.image_url}
             alt={card.title}
+            loading="lazy"
             />
           <CardContent>
             <Typography variant="h5" component="div">#{card.number_in_set}: {card.title}</Typography>

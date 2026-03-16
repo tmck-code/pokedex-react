@@ -62,7 +62,8 @@ export default function Cards({ card_set_code, search_term }) {
   const listCards = cards
   .filter(card => card.title.toLowerCase().includes(search_term.toLowerCase()))
   .map((card) => {
-    const img = card.image_url.substring(1);
+    const img = "/"+card.image_url;
+    console.log(card.image_url)
     return (
       <Grid key={"grid-"+card.number_in_set+"-"+card.title}>
         <ButtonBase

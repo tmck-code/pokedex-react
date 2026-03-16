@@ -123,7 +123,7 @@ def find_all_sets(url):
         yield info
 
 
-def run(url, odir="cards", ifpath: str = None):
+def run(url, odir="public/cards", ifpath: str = None):
     print("finding all sets, cards & images from", url)
     urls = []
     sets = list(find_all_sets(url))

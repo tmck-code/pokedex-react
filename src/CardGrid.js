@@ -61,28 +61,31 @@ export default function Cards({ card_set_code, search_term }) {
 
   const listCards = cards
   .filter(card => card.title.toLowerCase().includes(search_term.toLowerCase()))
-  .map((card) => (
-    <Grid key={"grid-"+card.number_in_set+"-"+card.title}>
-      <ButtonBase
-        key={"button-"+card.number_in_set+"-"+card.title}
-        onClick={() => handleClick(card.image_url)}
-      >
-      <Box>
-        <Card variant="outlined" sx={{ maxWidth: 300, maxHeight: 650 }}>
-          <CardMedia
-            component="img"
-            image={card.image_url}
-            alt={card.title}
-            loading="lazy"
-            />
-          <CardContent>
-            <Typography variant="h5" component="div">#{card.number_in_set}: {card.title}</Typography>
-          </CardContent>
-        </Card>
-      </Box>
-      </ButtonBase>
-    </Grid>
-  ));
+  .map((card) => {
+    const img = card.image_url.substring(1);
+    return (
+      <Grid key={"grid-"+card.number_in_set+"-"+card.title}>
+        <ButtonBase
+          key={"button-"+card.number_in_set+"-"+card.title}
+          onClick={() => handleClick(img)}
+        >
+        <Box>
+          <Card variant="outlined" sx={{ maxWidth: 300, maxHeight: 650 }}>
+            <CardMedia
+              component="img"
+              image={img}
+              alt={card.title}
+              loading="lazy"
+              />
+            <CardContent>
+              <Typography variant="h5" component="div">#{card.number_in_set}: {card.title}</Typography>
+            </CardContent>
+          </Card>
+        </Box>
+        </ButtonBase>
+      </Grid>
+    );
+  });
 
   return (
     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
